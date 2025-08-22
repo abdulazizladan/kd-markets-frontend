@@ -27,7 +27,7 @@
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let user">{{ user.info?.firstName }}</td>
+      <td mat-cell *matCellDef="let user">{{ user.info?.firstName | titlecase }} {{ user.info?.lastName | titlecase }}</td>
     </ng-container>
 
     <!-- Email Column -->
