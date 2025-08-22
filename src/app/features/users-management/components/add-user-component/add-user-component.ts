@@ -59,8 +59,9 @@ export class AddUserComponent {
     } as any;
 
     try {
-      const created = await this.usersService.createUser(payload);
-      this.usersStore.addUser(created as any);
+      //const created = await this.usersService.createUser(payload);
+      await this.usersStore.addUser(payload);
+      await this.usersStore.loadUsers();
       this.dialogRef.close(true);
     } catch (e) {
       // Keep dialog open; in a real app you might show a toast/snackbar

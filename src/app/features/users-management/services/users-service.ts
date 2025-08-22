@@ -12,7 +12,7 @@ export class UsersService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = env.baseUrl;
 
-  createUser(userDetails: User): Promise<User> {
+  createUser(userDetails: Partial<User>): Promise<User> {
     return firstValueFrom(
       this.http.post<{data: User}>(`${this.baseUrl}user`, userDetails).pipe(
         map(response => response.data)

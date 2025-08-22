@@ -5,6 +5,7 @@ import { User } from '../models/user.model';
 
 export interface UsersState {
   users: User[];
+  selectedUser: User | null;
   isLoading: boolean;
   error: string | null;
   search: string;
@@ -12,6 +13,7 @@ export interface UsersState {
 
 const initialState: UsersState = {
   users: [],
+  selectedUser: null,
   isLoading: false,
   error: null,
   search: ''
@@ -49,9 +51,18 @@ export const UsersStore = signalStore(
         patchState(store, { isLoading: false, error: error?.message ?? 'Failed to load users' });
       }
     },
-    addUser(newUser: User) {
-      const current = store.users();
-      patchState(store, { users: [newUser, ...current] });
+    async addUser(payload: Partial<User>) {
+      //const current = store.users();
+      //patchState(store, { isLoading: true, error: null users: [newUser, ...current] });
+      patchState(store, { isLoading: true, error: null});
+      try {
+        const created = await usersService.createUser(payload);
+        patchState(store, {users: [created, ...store.users()], isLoading: false});
+        return created;
+      } catch (error: any) {
+        patchState(store, { isLoading: false, error: error?.message ?? 'Failed to add user'});
+        throw error
+      }
     },
     setSearch(value: string) {
       patchState(store, { search: value });

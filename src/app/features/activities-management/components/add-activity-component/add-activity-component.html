@@ -1,0 +1,47 @@
+<h2 mat-dialog-title>Add Activity</h2>
+<form [formGroup]="form" (ngSubmit)="submit()" mat-dialog-content fxLayout="column" fxLayoutGap="12px">
+  <mat-form-field appearance="outline">
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="name" placeholder="e.g., Market Cleanup" />
+    <mat-error *ngIf="form.get('name')?.hasError('required')">Name is required</mat-error>
+    <mat-error *ngIf="form.get('name')?.hasError('minlength')">Name must be at least 3 characters</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Description</mat-label>
+    <textarea matInput formControlName="description" rows="3" placeholder="Describe the activity"></textarea>
+    <mat-error *ngIf="form.get('description')?.hasError('required')">Description is required</mat-error>
+    <mat-error *ngIf="form.get('description')?.hasError('minlength')">Description must be at least 5 characters</mat-error>
+  </mat-form-field>
+
+  <div fxLayout.xs="column" fxLayout.gt-xs="row" fxLayoutGap="12px">
+    <mat-form-field fxFlex appearance="outline">
+      <mat-label>Scheduled Time</mat-label>
+      <input matInput type="datetime-local" formControlName="scheduledTime" />
+      <mat-error *ngIf="form.get('scheduledTime')?.hasError('required')">Scheduled time is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field fxFlex appearance="outline">
+      <mat-label>Frequency</mat-label>
+      <mat-select formControlName="frequency">
+        <mat-option *ngFor="let freq of frequencyOptions" [value]="freq">{{ freq }}</mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.get('frequency')?.hasError('required')">Frequency is required</mat-error>
+    </mat-form-field>
+  </div>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Status</mat-label>
+    <mat-select formControlName="status">
+      <mat-option *ngFor="let s of statusOptions" [value]="s">{{ s }}</mat-option>
+    </mat-select>
+    <mat-error *ngIf="form.get('status')?.hasError('required')">Status is required</mat-error>
+  </mat-form-field>
+</form>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="close()">Cancel</button>
+  <button mat-flat-button color="primary" [disabled]="form.invalid || isSubmitting" (click)="submit()">
+    {{ isSubmitting ? 'Saving...' : 'Save' }}
+  </button>
+</mat-dialog-actions>

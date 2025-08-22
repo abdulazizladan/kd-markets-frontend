@@ -26,6 +26,14 @@ const routes: Routes = [
         loadChildren: () => import('../../features/markets-management/markets-management-module').then(module => module.MarketsManagementModule)
       },
       {
+        path: 'activities',
+        loadChildren: () => import('../../features/activities-management/activities-management-module').then(module => module.ActivitiesManagementModule)
+      },
+      {
+        path: 'payments',
+        loadChildren: () => import('../../features/payments-management/payments-management-module').then(module => module.PaymentsManagementModule)
+      },
+      {
         path: '**',
         redirectTo: 'dashboard',
         pathMatch: 'full'
