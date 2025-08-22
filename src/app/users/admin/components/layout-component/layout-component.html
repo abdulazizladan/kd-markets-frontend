@@ -1,0 +1,96 @@
+<div style="min-height: 100%;" fxLayout="column">
+    
+    <mat-toolbar color="primary" class="mat-elevation-z5">
+        <mat-toolbar-row fxLayout="row">
+            <button mat-icon-button color="primary" (click)="drawer.toggle()">
+                <mat-icon>menu</mat-icon>
+            </button>
+            KD-Markets - Admin
+            <span fxFlex="1 1 auto"></span>
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item>
+                    <mat-icon>settings</mat-icon>
+                    Settings
+                </button>
+                <button mat-menu-item (click)="logout()">
+                    <mat-icon>exit_to_app</mat-icon>
+                    Logout
+                </button>
+            </mat-menu>
+        </mat-toolbar-row>
+    </mat-toolbar>
+
+    <mat-drawer-container class="example-container" autosize fxFlex="1 1 auto" hasBackdrop="false">
+        <mat-drawer #drawer mode="over" opened class="example-sidenav" fxLayout="column">
+            <div id="profile">
+
+            </div>
+          <button mat-button routerLink="./dashboard" routerLinkActive="active">
+            <mat-icon>
+                dashboard
+            </mat-icon>
+            Dashboard
+        </button>
+        <button mat-button routerLink="./markets" routerLinkActive="active">
+            <mat-icon>business</mat-icon>
+            Markets
+        </button>
+        <button mat-button routerLink="./users" routerLinkActive="active">
+            <mat-icon>person</mat-icon>
+            Users
+        </button>
+        
+        <!--
+        <mat-accordion style="box-shadow: none; border-radius: 0;">
+          <mat-expansion-panel style="box-shadow: none; border-radius: 0;">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-icon>people</mat-icon>
+                Users
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div style="display: flex; flex-direction: column; gap: 8px; padding: 8px 0;">
+              <button mat-button routerLink="./users/admin" routerLinkActive="active">
+                <mat-icon>admin_panel_settings</mat-icon>
+                Admin
+              </button>
+              <button mat-button routerLink="./users/student" routerLinkActive="active">
+                <mat-icon>school</mat-icon>
+                Student
+              </button>
+              <button mat-button routerLink="./users/guardian" routerLinkActive="active">
+                <mat-icon>supervisor_account</mat-icon>
+                Guardian
+              </button>
+              <button mat-button routerLink="./users/staff" routerLinkActive="active">
+                <mat-icon>badge</mat-icon>
+                Staff
+              </button>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      -->
+        <button mat-button routerLink="./calendar" routerLinkActive="active">
+            <mat-icon>schedule</mat-icon>
+            Routine activities
+        </button>
+        <button mat-button routerLink="./fees" routerLinkActive="active">
+            <mat-icon>payment</mat-icon>
+            Payments
+        </button>
+        </mat-drawer>
+      
+        <div class="example-sidenav-content">
+            <div fxLayout="row" fxLayoutAlign="center center">
+                <div fxFlex.lt-md=100% fxFlex.gt-md=1024px>
+                    <router-outlet></router-outlet>
+                </div> 
+            </div>
+        </div>
+      
+      </mat-drawer-container>
+    
+</div>

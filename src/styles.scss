@@ -46,8 +46,23 @@ body {
   @include mat.card-overrides((
     elevated-container-color: #ffffff,
     elevated-container-elevation: red,
-    subtitle-text-size: 10px
+    subtitle-text-size: 10px,
+    filled-container-shape: 2px,
+    elevated-container-shape: 2px,
+    outlined-container-shape: 2px,
   ));
+}
+
+:root {
+  @include mat.button-overrides(
+    (
+      filled-container-shape:8px,
+      outlined-container-shape: 8px,
+      text-container-shape: 8px,
+      protected-container-shape: 8px,
+      tonal-container-shape: 8px
+    )
+  )
 }
 /* You can add global styles to this file, and also import other style files */
 

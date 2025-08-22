@@ -1,10 +1,13 @@
 <div style="height: 100%;" fxLayout="column" fxLayoutAlign="center center">
-    <mat-card>
+    <mat-card appearance="raised">
+        <img matCardImageXLarge src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlSGVp4AjlC46mgo12MNiUX91dXxvZKe-Vbg&s">
         <mat-card-header>
-            <mat-card-title>Login</mat-card-title>
+            <mat-card-title>Welcome</mat-card-title>
             <mat-card-subtitle>Log into your account</mat-card-subtitle>
+            
         </mat-card-header>
-        <mat-card-content fxLayout="column" [formGroup]="loginForm">
+        
+        <mat-card-content fxLayout="column" [formGroup]="loginForm" fxLayoutGap="25px">
 
             <mat-form-field appearance="outline">
                 <mat-label>Email</mat-label>
@@ -17,9 +20,27 @@
                 <input formControlName="password" type="password" matInput>
             </mat-form-field>
 
+            <!-- Error message display -->
+            <div *ngIf="error()" class="error-message">
+                <mat-error>{{ error() }}</mat-error>
+            </div>
+
+            @if(isLoading()){
+                <mat-progress-bar  mode="query"></mat-progress-bar>
+             }
         </mat-card-content>
+        
+        <!-- Loading progress bar -->
+         
+        
         <mat-card-actions>
-            <button mat-flat-button (click)="submit()" [disabled]="loginForm.invalid">Login</button>
+            <button 
+                mat-flat-button 
+                color="primary"
+                (click)="submit()" 
+                [disabled]="loginForm.invalid || isLoading()">
+                {{ isLoading() ? 'Logging in...' : 'Login' }}
+            </button>
         </mat-card-actions>
     </mat-card>
 </div>

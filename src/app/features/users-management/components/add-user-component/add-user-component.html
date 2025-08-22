@@ -1,0 +1,56 @@
+<h2 mat-dialog-title>Add User</h2>
+<form [formGroup]="form" (ngSubmit)="onSubmit()" mat-dialog-content fxLayout="column" fxLayoutGap="12px">
+  <div fxLayout="row" fxLayoutGap="12px" fxLayout.xs="column">
+    <mat-form-field fxFlex appearance="outline">
+      <mat-label>First name</mat-label>
+      <input matInput formControlName="firstName" placeholder="First name" />
+      <mat-error *ngIf="form.get('firstName')?.hasError('required')">First name is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field fxFlex appearance="outline">
+      <mat-label>Last name</mat-label>
+      <input matInput formControlName="lastName" placeholder="Last name" />
+      <mat-error *ngIf="form.get('lastName')?.hasError('required')">Last name is required</mat-error>
+    </mat-form-field>
+  </div>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Email</mat-label>
+    <input matInput type="email" formControlName="email" placeholder="email@example.com" />
+    <mat-error *ngIf="form.get('email')?.hasError('required')">Email is required</mat-error>
+    <mat-error *ngIf="form.get('email')?.hasError('email')">Enter a valid email</mat-error>
+  </mat-form-field>
+
+  <div fxLayout="row" fxLayoutGap="12px" fxLayout.xs="column">
+    <mat-form-field fxFlex appearance="outline">
+      <mat-label>Role</mat-label>
+      <input matInput formControlName="role" placeholder="admin | user" />
+      <mat-error *ngIf="form.get('role')?.hasError('required')">Role is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field fxFlex appearance="outline">
+      <mat-label>Status</mat-label>
+      <input matInput formControlName="status" placeholder="active | suspended" />
+      <mat-error *ngIf="form.get('status')?.hasError('required')">Status is required</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div fxLayout="row" fxLayoutGap="12px" fxLayout.xs="column">
+    <mat-form-field fxFlex appearance="outline">
+      <mat-label>Phone</mat-label>
+      <input matInput formControlName="phone" placeholder="Phone number" />
+    </mat-form-field>
+
+    <mat-form-field fxFlex appearance="outline">
+      <mat-label>Image URL</mat-label>
+      <input matInput formControlName="image" placeholder="https://..." />
+    </mat-form-field>
+  </div>
+</form>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button color="primary" mat-flat-button [disabled]="form.invalid || isSubmitting" (click)="onSubmit()">
+    {{ isSubmitting ? 'Saving...' : 'Save' }}
+  </button>
+</mat-dialog-actions>

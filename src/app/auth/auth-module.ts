@@ -8,6 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressBarModule } from '@angular/material/progress-bar'
 
 import { AuthRoutingModule } from './auth-routing-module';
 import { Login } from './components/login/login';
@@ -16,7 +17,6 @@ import { ResetPasswoord } from './components/reset-passwoord/reset-passwoord';
 
 @NgModule({
   providers:[
-    provideHttpClient()
   ],
   declarations: [
     Login,
@@ -29,6 +29,7 @@ import { ResetPasswoord } from './components/reset-passwoord/reset-passwoord';
     MatCardModule,
     MatInputModule,
     MatButtonModule,
+    MatProgressBarModule,
     AuthRoutingModule
   ]
 })

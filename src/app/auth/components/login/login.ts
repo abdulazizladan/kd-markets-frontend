@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { Auth } from '../../services/auth';
+import { AuthStore } from '../../store/auth.store';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -9,7 +10,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrl: './login.scss'
 })
 export class Login {
-  private readonly authService = inject(Auth);
+  private readonly authStore = inject(AuthStore);
+  private readonly router = inject(Router);
   private fb = inject(FormBuilder);
 
   loginForm: FormGroup = this.fb.group({
@@ -17,46 +19,31 @@ export class Login {
     password: ['', Validators.required],
   });
 
-  message: string | null = null;
-  isError: boolean = false;
+  // Get reactive state from the store
+  isLoading = this.authStore.loading;
+  error = this.authStore.error;
 
   async submit() {
-    this.message = null; // Clear previous messages
-    this.isError = false;
+    // Clear previous messages
+    //this.authStore.clearError();
 
     // Check if the form is valid before proceeding
     if (this.loginForm.invalid) {
-      this.isError = true;
-      this.message = 'Please correct the errors in the form.';
+      //this.authStore.setError('Please correct the errors in the form.');
       return;
     }
 
     const { email, password } = this.loginForm.value;
 
     try {
-      // Attempt to sign in with email and password
-      //await signInWithEmailAndPassword(this.authService, email, password);
-      this.message = 'Login successful!';
-      // In a real application, you would navigate to a new page here.
-      // E.g., this.router.navigate(['/dashboard']);
+      console.log('Login payload:', { email, password });
+      // Use the auth store to login
+      await this.authStore.login({ email, password });
+
+      // Navigation handled by AuthStore based on role
     } catch (error: any) {
-      this.isError = true;
+      // Error is automatically handled by the store
       console.error('Login failed:', error);
-      // Display a user-friendly error message based on the Firebase error code
-      switch (error.code) {
-        case 'auth/wrong-password':
-        case 'auth/user-not-found':
-          this.message = 'Invalid email or password.';
-          break;
-        case 'auth/invalid-email':
-          this.message = 'The email address is not in a valid format.';
-          break;
-        case 'auth/user-disabled':
-          this.message = 'This user account has been disabled.';
-          break;
-        default:
-          this.message = 'An unknown error occurred. Please try again.';
-      }
     }
   }
 }
