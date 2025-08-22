@@ -23,6 +23,24 @@ export class UsersListComponent implements OnInit, OnDestroy {
 
   // Reactive state signals
   users = this.store.filteredUsers;
+  allUsers = this.store.users;
+
+  // Summary counts
+  get totalUsers(): number {
+    return this.allUsers().length;
+  }
+
+  get adminUsers(): number {
+    return this.allUsers().filter(u => (u.role || '').toLowerCase() === 'admin').length;
+  }
+
+  get marketManagers(): number {
+    return this.allUsers().filter(u => (u.role || '').toLowerCase() === 'manager' || (u.role || '').toLowerCase() === 'market manager' || (u.role || '').toLowerCase() === 'market_manager').length;
+  }
+
+  get activeUsers(): number {
+    return this.allUsers().filter(u => (u.status || '').toLowerCase() === 'active').length;
+  }
   isLoading = this.store.isLoading;
   error = this.store.error;
 

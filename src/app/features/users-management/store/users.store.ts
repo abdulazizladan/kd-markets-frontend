@@ -49,6 +49,10 @@ export const UsersStore = signalStore(
         patchState(store, { isLoading: false, error: error?.message ?? 'Failed to load users' });
       }
     },
+    addUser(newUser: User) {
+      const current = store.users();
+      patchState(store, { users: [newUser, ...current] });
+    },
     setSearch(value: string) {
       patchState(store, { search: value });
     },

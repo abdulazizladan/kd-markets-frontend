@@ -1,4 +1,28 @@
 <div fxLayout="column" fxLayoutGap="16px" style="padding: 16px;">
+  
+  <div fxLayout.xs="column" fxLayout.gt-xs="row" fxLayoutGap="15px">
+    <mat-card fxFlex class="kpi-card kpi-total">
+      <mat-card-title>Total markets</mat-card-title>
+      <mat-card-content>{{ totalMarkets }}</mat-card-content>
+    </mat-card>
+    <mat-card fxFlex class="kpi-card kpi-shops">
+      <mat-card-title>Total shops</mat-card-title>
+      <mat-card-content>{{ totalShops }}</mat-card-content>
+    </mat-card>
+    <mat-card fxFlex class="kpi-card kpi-stalls">
+      <mat-card-title>Total stalls</mat-card-title>
+      <mat-card-content>{{ totalStalls }}</mat-card-content>
+    </mat-card>
+    <mat-card fxFlex class="kpi-card kpi-buildings">
+      <mat-card-title>Total buildings</mat-card-title>
+      <mat-card-content>{{ totalBuildings }}</mat-card-content>
+    </mat-card>
+  </div>
+
+  <div fxLayout.xs="column" fxLayout.gt-xs="row" fxLayoutGap="15px">
+    
+  </div>
+
     <div fxLayout="row" fxLayoutAlign="start center">
         <span fxFlex="1 1 auto"></span>
         <button mat-flat-button (click)="openAddMarketDialog()">

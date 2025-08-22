@@ -19,13 +19,19 @@ export class AddUserComponent {
   isSubmitting = false;
 
   form: FormGroup = this.fb.group({
-    firstName: ['', Validators.required],
-    lastName: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    role: ['', Validators.required],
-    status: ['', Validators.required],
-    phone: [''],
-    image: [''],
+    password: ['', Validators.required],
+    role: ['manager', Validators.required],
+    status: ['active', Validators.required],
+    info: this.fb.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      age: [0, [Validators.required]],
+      image: ['']
+    }),
+    contact: this.fb.group({
+      phone: ['']
+    })
   });
 
   async onSubmit() {
@@ -34,26 +40,27 @@ export class AddUserComponent {
     }
 
     this.isSubmitting = true;
-    const { firstName, lastName, email, role, status, phone, image } = this.form.value;
+    const { email, password, role, info, contact } = this.form.value;
 
-    // Prepare payload based on User, Info, and Contact models
+    // Prepare payload using requested schema
     const payload = {
       email,
+      password,
       role,
-      status,
       info: {
-        firstName,
-        lastName,
-        image,
+        firstName: info.firstName,
+        lastName: info.lastName,
+        age: Number(info.age) || 0,
+        image: info.image
       },
       contact: {
-        phone,
-      },
-    } as any; // Allow backend to generate id/createdAt
+        phone: contact.phone
+      }
+    } as any;
 
     try {
-      await this.usersService.createUser(payload);
-      await this.usersStore.loadUsers();
+      const created = await this.usersService.createUser(payload);
+      this.usersStore.addUser(created as any);
       this.dialogRef.close(true);
     } catch (e) {
       // Keep dialog open; in a real app you might show a toast/snackbar

@@ -1,11 +1,211 @@
 <div fxLayout="column" fxLayoutAlign="start stretch" style="height: 100%; padding: 16px;">
-  <h2>Sales Distribution</h2>
-  <div style="height: 320px;">
-    <canvas 
-      baseChart
-      [type]="pieChartType"
-      [data]="pieChartData"
-      [options]="pieChartOptions">
-    </canvas>
+  <!-- KPI Summary Cards -->
+  <div fxLayout.xs="column" fxLayout.gt-xs="row" fxLayoutGap="16px" style="margin-bottom: 24px;">
+    <mat-card fxFlex class="kpi-card kpi-markets">
+      <mat-card-title>Total Markets</mat-card-title>
+      <mat-card-content>{{ kpiData.totalMarkets }}</mat-card-content>
+    </mat-card>
+    <mat-card fxFlex class="kpi-card kpi-stalls">
+      <mat-card-title>Total Stalls</mat-card-title>
+      <mat-card-content>{{ kpiData.totalStalls }}</mat-card-content>
+    </mat-card>
+    <mat-card fxFlex class="kpi-card kpi-revenue">
+      <mat-card-title>Total Revenue</mat-card-title>
+      <mat-card-content>{{ kpiData.totalRevenue }}</mat-card-content>
+    </mat-card>
+    <mat-card fxFlex class="kpi-card kpi-occupancy">
+      <mat-card-title>Occupancy Rate</mat-card-title>
+      <mat-card-content>{{ kpiData.occupancyRate }}</mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Markets and Assets Overview Section -->
+  <h2 style="margin: 24px 0 16px 0; color: #333;">Markets and Assets Overview</h2>
+  
+  <div fxLayout.xs="column" fxLayout.gt-md="row" fxLayoutGap="16px" style="margin-bottom: 24px;">
+    <!-- Markets by LGA -->
+    <mat-card fxFlex class="chart-card">
+      <mat-card-header>
+        <mat-card-title>Markets by Local Government Area (LGA)</mat-card-title>
+        <mat-card-subtitle>Distribution of markets across Kaduna State LGAs</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div style="height: 300px;">
+          <canvas baseChart
+            [type]="barChartType"
+            [data]="marketsByLGAData"
+            [options]="barChartOptions">
+          </canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Stall Occupancy Status -->
+    <mat-card fxFlex class="chart-card">
+      <mat-card-header>
+        <mat-card-title>Stall Occupancy Status</mat-card-title>
+        <mat-card-subtitle>Percentage breakdown of stall status</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div style="height: 300px;">
+          <canvas baseChart
+            [type]="doughnutChartType"
+            [data]="stallOccupancyData"
+            [options]="doughnutChartOptions">
+          </canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Building Status by Market -->
+  <div style="margin-bottom: 24px;">
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>Building Status by Market</mat-card-title>
+        <mat-card-subtitle>Breakdown of stalls within buildings</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div style="height: 350px;">
+          <canvas baseChart
+            [type]="stackedBarChartType"
+            [data]="buildingStatusData"
+            [options]="stackedBarChartOptions">
+          </canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Revenue and Rent Tracking Section -->
+  <h2 style="margin: 24px 0 16px 0; color: #333;">Revenue and Rent Tracking</h2>
+  
+  <div fxLayout.xs="column" fxLayout.gt-md="row" fxLayoutGap="16px" style="margin-bottom: 24px;">
+    <!-- Monthly Revenue Trend -->
+    <mat-card fxFlex class="chart-card">
+      <mat-card-header>
+        <mat-card-title>Monthly Revenue Trend</mat-card-title>
+        <mat-card-subtitle>Revenue generation over time with forecast</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div style="height: 300px;">
+          <canvas baseChart
+            [type]="lineChartType"
+            [data]="monthlyRevenueData"
+            [options]="lineChartOptions">
+          </canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Revenue Breakdown by Market -->
+    <mat-card fxFlex class="chart-card">
+      <mat-card-header>
+        <mat-card-title>Revenue Breakdown by Market</mat-card-title>
+        <mat-card-subtitle>Revenue streams across different markets</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div style="height: 300px;">
+          <canvas baseChart
+            [type]="stackedBarChartType"
+            [data]="revenueBreakdownData"
+            [options]="stackedBarChartOptions">
+          </canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Rent Payment Status -->
+  <div style="margin-bottom: 24px;">
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>Rent Payment Status</mat-card-title>
+        <mat-card-subtitle>Current period collection progress</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div fxLayout="row" fxLayoutAlign="space-between center" style="margin-bottom: 16px;">
+          <div>
+            <h3 style="margin: 0; color: #2e7d32;">₦{{ (rentPaymentStatus.collected / 100) * rentPaymentStatus.totalExpected / 10000 | number:'1.0-0' }}K</h3>
+            <p style="margin: 0; color: #666;">Collected</p>
+          </div>
+          <div>
+            <h3 style="margin: 0; color: #c62828;">₦{{ (rentPaymentStatus.outstanding / 100) * rentPaymentStatus.totalExpected / 10000 | number:'1.0-0' }}K</h3>
+            <p style="margin: 0; color: #666;">Outstanding</p>
+          </div>
+          <div>
+            <h3 style="margin: 0; color: #333;">₦{{ rentPaymentStatus.totalExpected / 1000000 | number:'1.1-1' }}M</h3>
+            <p style="margin: 0; color: #666;">Total Expected</p>
+          </div>
+        </div>
+        <mat-progress-bar 
+          mode="determinate" 
+          [value]="rentPaymentStatus.collected"
+          color="primary"
+          style="height: 8px;">
+        </mat-progress-bar>
+        <p style="text-align: center; margin: 8px 0 0 0; color: #666;">
+          {{ rentPaymentStatus.collected }}% Collected
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Maintenance and Operations Section -->
+  <h2 style="margin: 24px 0 16px 0; color: #333;">Maintenance and Operations</h2>
+  
+  <div fxLayout.xs="column" fxLayout.gt-md="row" fxLayoutGap="16px" style="margin-bottom: 24px;">
+    <!-- Maintenance Request Categories -->
+    <mat-card fxFlex class="chart-card">
+      <mat-card-header>
+        <mat-card-title>Maintenance Request Categories</mat-card-title>
+        <mat-card-subtitle>Breakdown by maintenance type</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div style="height: 300px;">
+          <canvas baseChart
+            [type]="barChartType"
+            [data]="maintenanceCategoriesData"
+            [options]="barChartOptions">
+          </canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Maintenance Completion Rate -->
+    <mat-card fxFlex class="chart-card">
+      <mat-card-header>
+        <mat-card-title>Maintenance Completion Rate</mat-card-title>
+        <mat-card-subtitle>Weekly completion percentage</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div style="height: 300px;">
+          <canvas baseChart
+            [type]="lineChartType"
+            [data]="maintenanceCompletionData"
+            [options]="lineChartOptions">
+          </canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Maintenance Costs by Market -->
+  <div style="margin-bottom: 24px;">
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>Maintenance Costs by Market</mat-card-title>
+        <mat-card-subtitle>Cost distribution across markets</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div style="height: 350px;">
+          <canvas baseChart
+            [type]="pieChartType"
+            [data]="maintenanceCostsData"
+            [options]="pieChartOptions">
+          </canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
   </div>
 </div>

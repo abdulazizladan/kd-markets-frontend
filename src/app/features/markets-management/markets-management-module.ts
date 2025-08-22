@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatCardModule } from '@angular/material/card';
 
 import { MarketsManagementRoutingModule } from './markets-management-routing-module';
 import { MarketsListComponent } from './components/markets-list-component/markets-list-component';
@@ -33,6 +34,7 @@ import { AddMarketComponent } from './components/add-market-component/add-market
     FlexLayoutModule,
     MatDialogModule,
     MatTableModule,
+    MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,

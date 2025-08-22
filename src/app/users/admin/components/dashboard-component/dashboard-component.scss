@@ -1,11 +1,133 @@
-h2 {
-  margin: 0 0 16px 0;
+// KPI Cards
+.kpi-card {
+  color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  mat-card-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    opacity: 0.9;
+  }
+
+  mat-card-content {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+  }
 }
 
+.kpi-markets {
+  background: linear-gradient(135deg, #1e88e5, #1565c0);
+}
+
+.kpi-stalls {
+  background: linear-gradient(135deg, #8e24aa, #6a1b9a);
+}
+
+.kpi-revenue {
+  background: linear-gradient(135deg, #2e7d32, #1b5e20);
+}
+
+.kpi-occupancy {
+  background: linear-gradient(135deg, #fb8c00, #ef6c00);
+}
+
+// Chart Cards
 .chart-card {
-  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+
+  mat-card-header {
+    padding: 16px 16px 0 16px;
+    
+    mat-card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 4px;
+    }
+
+    mat-card-subtitle {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 0;
+    }
+  }
+
+  mat-card-content {
+    padding: 16px;
+  }
 }
 
-canvas {
-  display: block;
+// Section Headers
+h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin: 32px 0 20px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+// Responsive adjustments
+@media (max-width: 959px) {
+  .kpi-card {
+    margin-bottom: 16px;
+  }
+
+  .chart-card {
+    margin-bottom: 20px;
+  }
+
+  h2 {
+    font-size: 20px;
+    margin: 24px 0 16px 0;
+  }
+}
+
+@media (max-width: 599px) {
+  .kpi-card {
+    padding: 16px;
+
+    mat-card-title {
+      font-size: 12px;
+    }
+
+    mat-card-content {
+      font-size: 24px;
+    }
+  }
+
+  .chart-card {
+    mat-card-header {
+      padding: 12px 12px 0 12px;
+
+      mat-card-title {
+        font-size: 16px;
+      }
+
+      mat-card-subtitle {
+        font-size: 12px;
+      }
+    }
+
+    mat-card-content {
+      padding: 12px;
+    }
+  }
+
+  h2 {
+    font-size: 18px;
+    margin: 20px 0 12px 0;
+  }
 }

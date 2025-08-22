@@ -22,6 +22,7 @@ export class MarketsListComponent implements OnInit, OnDestroy {
   markets = this.store.filteredMarkets;
   isLoading = this.store.isLoading;
   error = this.store.error;
+  allMarkets = this.store.markets;
 
   // Search control
   searchControl = new FormControl('');
@@ -40,5 +41,23 @@ export class MarketsListComponent implements OnInit, OnDestroy {
 
   openAddMarketDialog() {
     this.dialog.open(AddMarketComponent, { width: '520px' });
+  }
+
+  // KPI getters
+  get totalMarkets(): number {
+    return this.allMarkets().length;
+  }
+
+  get totalBuildings(): number {
+    return this.allMarkets().reduce((sum, m) => sum + (m.buildings?.length ?? 0), 0);
+  }
+
+  get totalStalls(): number {
+    return this.allMarkets().reduce((sum, m) => sum + (m.stalls?.length ?? 0), 0);
+  }
+
+  get totalShops(): number {
+    // No shops model available yet; placeholder until model is defined
+    return 0;
   }
 }

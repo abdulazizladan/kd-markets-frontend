@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { User } from '../models/user.model';
 import { env } from '../../../../environment/environment';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,9 @@ export class UsersService {
 
   createUser(userDetails: User): Promise<User> {
     return firstValueFrom(
-      this.http.post<User>(`${this.baseUrl}user`, userDetails)
+      this.http.post<{data: User}>(`${this.baseUrl}user`, userDetails).pipe(
+        map(response => response.data)
+      )
     );
   }
 

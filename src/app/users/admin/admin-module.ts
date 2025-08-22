@@ -10,6 +10,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 import { AdminRoutingModule } from './admin-routing-module';
@@ -34,6 +36,8 @@ import { DashboardComponent } from './components/dashboard-component/dashboard-c
     MatIconModule,
     MatMenuModule,
     MatToolbarModule,
+    MatCardModule,
+    MatProgressBarModule,
     BaseChartDirective,
     AdminRoutingModule
   ]
