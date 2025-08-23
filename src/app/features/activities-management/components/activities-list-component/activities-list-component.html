@@ -221,7 +221,7 @@
     </div>
   }
 
-  @if (!isLoading() && activities().length === 0) {
+  @if (!isLoading() && totalActivities() === 0) {
     <div class="no-data">
       <!--<mat-icon>event_busy</mat-icon>-->
       <p>No activities found.</p>

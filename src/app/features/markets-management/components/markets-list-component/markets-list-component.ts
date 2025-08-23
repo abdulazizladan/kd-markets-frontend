@@ -16,7 +16,7 @@ export class MarketsListComponent implements OnInit, OnDestroy {
   private readonly dialog = inject(MatDialog);
 
   // Table columns
-  displayedColumns: string[] = ['id', 'name', 'streetAddress', 'town', 'lga', 'state'];
+  displayedColumns: string[] = ['name', 'streetAddress', 'town', 'lga', 'state', 'actions'];
 
   // Reactive state signals
   markets = this.store.filteredMarkets;

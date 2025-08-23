@@ -67,8 +67,8 @@ body {
 
 :root {
   @include mat.toolbar-overrides((
-    container-background-color: rgb(27, 71, 45),
-    container-text-color: white,
+    container-text-color: rgb(27, 71, 45),
+    container-background-color: white,
   ));
 }
 /* You can add global styles to this file, and also import other style files */

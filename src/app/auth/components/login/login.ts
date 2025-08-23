@@ -36,7 +36,6 @@ export class Login {
     const { email, password } = this.loginForm.value;
 
     try {
-      console.log('Login payload:', { email, password });
       // Use the auth store to login
       await this.authStore.login({ email, password });
 

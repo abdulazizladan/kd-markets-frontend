@@ -19,7 +19,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
   private readonly dialog = inject(MatDialog);
 
   // Table columns
-  displayedColumns: string[] = ['id', 'name', 'email', 'role', 'status', 'phone', 'createdAt'];
+  displayedColumns: string[] = ['name', 'email', 'role', 'status', 'phone', 'actions'];
 
   // Reactive state signals
   users = this.store.filteredUsers;

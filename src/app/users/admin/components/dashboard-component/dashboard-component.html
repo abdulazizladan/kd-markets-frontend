@@ -3,11 +3,11 @@
   <div fxLayout.xs="column" fxLayout.gt-xs="row" fxLayoutGap="16px" style="margin-bottom: 24px;">
     <mat-card fxFlex class="kpi-card kpi-markets">
       <mat-card-title>Total Markets</mat-card-title>
-      <mat-card-content>{{ kpiData.totalMarkets }}</mat-card-content>
+      <mat-card-content>{{ kpiData.totalMarkets | number: '1.0-0' }}</mat-card-content>
     </mat-card>
     <mat-card fxFlex class="kpi-card kpi-stalls">
       <mat-card-title>Total Stalls</mat-card-title>
-      <mat-card-content>{{ kpiData.totalStalls }}</mat-card-content>
+      <mat-card-content>{{ kpiData.totalStalls | number: '1.0-0'}}</mat-card-content>
     </mat-card>
     <mat-card fxFlex class="kpi-card kpi-revenue">
       <mat-card-title>Total Revenue</mat-card-title>

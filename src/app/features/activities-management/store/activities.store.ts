@@ -61,7 +61,7 @@ export const ActivitiesStore = signalStore(
   withComputed((state) => ({
     // Computed properties for filtered activities
     filteredActivities: computed(() => {
-      let filtered = state.activities();
+      let filtered = state.activities() || [];
       
       // Apply search filter
       const searchTerm = state.search().trim().toLowerCase();
@@ -109,32 +109,32 @@ export const ActivitiesStore = signalStore(
 
     // Computed properties for different activity statuses
     plannedActivities: computed(() => 
-      state.activities().filter(activity => activity.status === ActivityStatus.Planned)
+      (state.activities() || []).filter(activity => activity.status === ActivityStatus.Planned)
     ),
 
     inProgressActivities: computed(() => 
-      state.activities().filter(activity => activity.status === ActivityStatus.InProgress)
+      (state.activities() || []).filter(activity => activity.status === ActivityStatus.InProgress)
     ),
 
     completedActivities: computed(() => 
-      state.activities().filter(activity => activity.status === ActivityStatus.Completed)
+      (state.activities() || []).filter(activity => activity.status === ActivityStatus.Completed)
     ),
 
     overdueActivities: computed(() => 
-      state.activities().filter(activity => activity.status === ActivityStatus.Overdue)
+      (state.activities() || []).filter(activity => activity.status === ActivityStatus.Overdue)
     ),
 
     // Computed properties for different frequencies
     dailyActivities: computed(() => 
-      state.activities().filter(activity => activity.frequency === ActivityFrequency.Daily)
+      (state.activities() || []).filter(activity => activity.frequency === ActivityFrequency.Daily)
     ),
 
     weeklyActivities: computed(() => 
-      state.activities().filter(activity => activity.frequency === ActivityFrequency.Weekly)
+      (state.activities() || []).filter(activity => activity.frequency === ActivityFrequency.Weekly)
     ),
 
     monthlyActivities: computed(() => 
-      state.activities().filter(activity => activity.frequency === ActivityFrequency.Monthly)
+      (state.activities() || []).filter(activity => activity.frequency === ActivityFrequency.Monthly)
     ),
 
     // Computed properties for pagination
@@ -147,11 +147,11 @@ export const ActivitiesStore = signalStore(
     ),
 
     // Computed properties for activity counts
-    totalActivities: computed(() => state.activities().length),
-    totalPlanned: computed(() => state.activities().filter(a => a.status === ActivityStatus.Planned).length),
-    totalInProgress: computed(() => state.activities().filter(a => a.status === ActivityStatus.InProgress).length),
-    totalCompleted: computed(() => state.activities().filter(a => a.status === ActivityStatus.Completed).length),
-    totalOverdue: computed(() => state.activities().filter(a => a.status === ActivityStatus.Overdue).length)
+    totalActivities: computed(() => state.activities()?.length || 0),
+    totalPlanned: computed(() => state.activities()?.filter(a => a.status === ActivityStatus.Planned)?.length || 0),
+    totalInProgress: computed(() => state.activities()?.filter(a => a.status === ActivityStatus.InProgress)?.length || 0),
+    totalCompleted: computed(() => state.activities()?.filter(a => a.status === ActivityStatus.Completed)?.length || 0),
+    totalOverdue: computed(() => state.activities()?.filter(a => a.status === ActivityStatus.Overdue)?.length || 0)
   })),
   withMethods((store, activitiesService = inject(ActivitiesService)) => ({
     // Load activities with optional filtering and pagination
@@ -162,7 +162,7 @@ export const ActivitiesStore = signalStore(
         const response = await firstValueFrom(activitiesService.getAllActivities(params));
         
         patchState(store, {
-          activities: response.activities,
+          activities: response.activities || [],
           pagination: {
             page: response.page,
             limit: response.limit,
@@ -200,7 +200,7 @@ export const ActivitiesStore = signalStore(
         const response = await firstValueFrom(activitiesService.getActivitiesByMarket(marketId, params));
         
         patchState(store, {
-          activities: response.activities,
+          activities: response.activities || [],
           pagination: {
             page: response.page,
             limit: response.limit,
@@ -248,7 +248,7 @@ export const ActivitiesStore = signalStore(
         const created = await firstValueFrom(activitiesService.createActivity(activity));
         
         // Add to current activities list
-        const currentActivities = store.activities();
+        const currentActivities = store.activities() || [];
         patchState(store, {
           activities: [created, ...currentActivities],
           pagination: {
@@ -276,7 +276,7 @@ export const ActivitiesStore = signalStore(
         const updated = await firstValueFrom(activitiesService.updateActivity(id, updates));
         
         // Update in activities list
-        const currentActivities = store.activities();
+        const currentActivities = store.activities() || [];
         const updatedActivities = currentActivities.map(activity =>
           activity.id === id ? updated : activity
         );
@@ -303,7 +303,7 @@ export const ActivitiesStore = signalStore(
         const updated = await firstValueFrom(activitiesService.updateActivityStatus(id, status));
         
         // Update in activities list
-        const currentActivities = store.activities();
+        const currentActivities = store.activities() || [];
         const updatedActivities = currentActivities.map(activity =>
           activity.id === id ? updated : activity
         );
@@ -328,7 +328,7 @@ export const ActivitiesStore = signalStore(
         const updated = await firstValueFrom(activitiesService.markActivityCompleted(id, completionDate));
         
         // Update in activities list
-        const currentActivities = store.activities();
+        const currentActivities = store.activities() || [];
         const updatedActivities = currentActivities.map(activity =>
           activity.id === id ? updated : activity
         );
@@ -355,7 +355,7 @@ export const ActivitiesStore = signalStore(
         await firstValueFrom(activitiesService.deleteActivity(id));
         
         // Remove from activities list
-        const currentActivities = store.activities();
+        const currentActivities = store.activities() || [];
         const filteredActivities = currentActivities.filter(activity => activity.id !== id);
         
         patchState(store, {
@@ -384,7 +384,7 @@ export const ActivitiesStore = signalStore(
         const result = await firstValueFrom(activitiesService.bulkUpdateStatus(activityIds, status));
         
         // Update affected activities in the list
-        const currentActivities = store.activities();
+        const currentActivities = store.activities() || [];
         const updatedActivities = currentActivities.map(activity =>
           activityIds.includes(activity.id) 
             ? { ...activity, status }
@@ -471,5 +471,19 @@ export const ActivitiesStore = signalStore(
           limit: store.pagination().limit
         });
       }
+    },
+
+    // Utility method to clear activities
+    clearActivities() {
+      patchState(store, {
+        activities: [],
+        selectedActivity: null,
+        pagination: {
+          page: 1,
+          limit: 20,
+          total: 0,
+          totalPages: 0
+        }
+      });
     }
 })))

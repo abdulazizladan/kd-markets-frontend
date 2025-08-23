@@ -77,10 +77,27 @@
             <mat-icon>schedule</mat-icon>
             Routine activities
         </button>
-        <button mat-button routerLink="./payments" routerLinkActive="active">
-            <mat-icon>payment</mat-icon>
-            Payments
-        </button>
+        
+        <mat-accordion style="box-shadow: none; border-radius: 0;">
+          <mat-expansion-panel style="box-shadow: none; border-radius: 0;">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <mat-icon>payment</mat-icon>
+                Payments
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div style="display: flex; flex-direction: column; gap: 8px; padding: 8px 0;">
+              <button mat-button routerLink="./payments" routerLinkActive="active">
+                <mat-icon>description</mat-icon>
+                Invoices
+              </button>
+              <button mat-button routerLink="./payments/history" routerLinkActive="active">
+                <mat-icon>history</mat-icon>
+                Payment History
+              </button>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
         </mat-drawer>
       
         <div class="example-sidenav-content">

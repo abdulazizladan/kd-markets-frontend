@@ -36,8 +36,8 @@ export class DashboardComponent {
     datasets: [
       {
         data: [4, 6, 3, 5, 4, 2],
-        backgroundColor: 'rgba(54, 162, 235, 0.8)',
-        borderColor: 'rgba(54, 162, 235, 1)',
+        backgroundColor: 'rgba(16, 106, 76, 0.8)',
+        borderColor: 'rgb(18, 104, 16)',
         borderWidth: 1,
         label: 'Number of Markets'
       }
@@ -52,8 +52,8 @@ export class DashboardComponent {
         data: [1085, 108, 54],
         backgroundColor: [
           'rgba(46, 125, 50, 0.8)',
-          'rgba(198, 40, 40, 0.8)',
-          'rgba(251, 140, 0, 0.8)'
+          'rgba(24, 110, 15, 0.8)',
+          'rgba(251, 215, 11, 0.8)'
         ],
         borderWidth: 2,
         borderColor: '#fff'
@@ -96,7 +96,7 @@ export class DashboardComponent {
       {
         label: 'Actual Revenue',
         data: [3.2, 3.8, 4.1, 3.9, 4.5, 4.8, 4.2, 4.6, 4.9, 5.1, 4.7, 5.3],
-        borderColor: 'rgba(54, 162, 235, 1)',
+        borderColor: 'rgb(19, 113, 38)',
         backgroundColor: 'rgba(54, 162, 235, 0.1)',
         borderWidth: 3,
         fill: true,
@@ -105,7 +105,7 @@ export class DashboardComponent {
       {
         label: 'Forecast',
         data: [null, null, null, null, null, null, null, null, null, null, 4.7, 5.3],
-        borderColor: 'rgba(255, 99, 132, 1)',
+        borderColor: 'rgb(255, 163, 15)',
         backgroundColor: 'rgba(255, 99, 132, 0.1)',
         borderWidth: 2,
         borderDash: [5, 5],
@@ -122,8 +122,8 @@ export class DashboardComponent {
       {
         label: 'Rent Payments',
         data: [2.8, 2.1, 2.9, 1.8, 2.3],
-        backgroundColor: 'rgba(54, 162, 235, 0.8)',
-        borderColor: 'rgba(54, 162, 235, 1)',
+        backgroundColor: 'rgba(15, 98, 33, 0.8)',
+        borderColor: 'rgb(54, 235, 114)',
         borderWidth: 1
       },
       {
@@ -136,8 +136,8 @@ export class DashboardComponent {
       {
         label: 'Service Charges',
         data: [0.2, 0.1, 0.3, 0.1, 0.2],
-        backgroundColor: 'rgba(75, 192, 192, 0.8)',
-        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(27, 126, 255, 0.8)',
+        borderColor: 'rgb(107, 192, 249)',
         borderWidth: 1
       }
     ]

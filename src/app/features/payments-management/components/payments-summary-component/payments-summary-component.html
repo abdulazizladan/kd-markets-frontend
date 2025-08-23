@@ -1,1 +1,169 @@
-<p>payments-summary-component works!</p>
+<div class="payment-dashboard bright-theme">
+  <!-- Header Section -->
+  <div class="dashboard-header">
+    <h1>Payment Dashboard</h1>
+    <p class="subtitle">Overview of your payment metrics and financial performance</p>
+  </div>
+
+  <!-- Key Metrics Cards -->
+  <div class="metrics-grid">
+    <mat-card class="metric-card revenue-card bright-card">
+      <mat-card-content>
+        <div class="metric-icon">
+          <mat-icon>attach_money</mat-icon>
+        </div>
+        <div class="metric-content">
+          <h3>Total Revenue</h3>
+          <div class="metric-value">{{ formatCurrency(totalRevenue) }}</div>
+          <div class="metric-change positive">
+            <mat-icon>trending_up</mat-icon>
+            +{{ monthlyGrowth }}% this month
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="metric-card outstanding-card bright-card">
+      <mat-card-content>
+        <div class="metric-icon">
+          <mat-icon>receipt_long</mat-icon>
+        </div>
+        <div class="metric-content">
+          <h3>Outstanding Bills</h3>
+          <div class="metric-value">{{ formatCurrency(outstandingBills) }}</div>
+          <div class="metric-change">
+            <mat-icon>schedule</mat-icon>
+            Requires attention
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="metric-card invoices-card bright-card">
+      <mat-card-content>
+        <div class="metric-icon">
+          <mat-icon>description</mat-icon>
+        </div>
+        <div class="metric-content">
+          <h3>Total Invoices</h3>
+          <div class="metric-value">{{ totalInvoices }}</div>
+          <div class="metric-change">
+            <mat-icon>check_circle</mat-icon>
+            {{ paidInvoices }} paid
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="metric-card pending-card bright-card">
+      <mat-card-content>
+        <div class="metric-icon">
+          <mat-icon>pending_actions</mat-icon>
+        </div>
+        <div class="metric-content">
+          <h3>Pending Invoices</h3>
+          <div class="metric-value">{{ pendingInvoices }}</div>
+          <div class="metric-change">
+            <mat-icon>hourglass_empty</mat-icon>
+            Awaiting payment
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="charts-section">
+    <div class="chart-container">
+      <mat-card class="chart-card bright-card">
+        <mat-card-header>
+          <mat-card-title>Revenue Trend</mat-card-title>
+          <mat-card-subtitle>Monthly revenue performance over the last 6 months</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart-wrapper">
+            <canvas baseChart
+                    [data]="revenueChartData"
+                    [options]="revenueChartOptions"
+                    [type]="'line'">
+            </canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="chart-container">
+      <mat-card class="chart-card bright-card">
+        <mat-card-header>
+          <mat-card-title>Invoice Status</mat-card-title>
+          <mat-card-subtitle>Distribution of invoice statuses</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="chart-wrapper">
+            <canvas baseChart
+                    [data]="invoiceStatusChartData"
+                    [options]="invoiceStatusChartOptions"
+                    [type]="'doughnut'">
+            </canvas>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div>
+    <mat-card class="actions-card bright-card">
+      <mat-card-header>
+        <mat-card-title>Quick Actions</mat-card-title>
+        <mat-card-subtitle>Navigate to key payment functions</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div fxLayout="row" fxLayoutGap="15px">
+          <button mat-flat-button color="primary" (click)="openBillingFormDialog()">
+            <mat-icon>add</mat-icon>
+            Create Invoice
+          </button>
+          <button mat-flat-button color="primary">
+            <mat-icon>list</mat-icon>
+            View All Invoices
+          </button>
+          <button mat-flat-button color="primary">
+            <mat-icon>history</mat-icon>
+            Payment History
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- Recent Transactions -->
+  <div class="recent-transactions">
+    <mat-card class="transactions-card bright-card">
+      <mat-card-header>
+        <mat-card-title>Recent Transactions</mat-card-title>
+        <mat-card-subtitle>Latest payment activities</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="transaction-list">
+          <div class="transaction-item" *ngFor="let transaction of recentTransactions">
+            <div class="transaction-info">
+              <div class="transaction-id">{{ transaction.id }}</div>
+              <div class="transaction-customer">{{ transaction.customer }}</div>
+              <div class="transaction-date">{{ formatDate(transaction.date) }}</div>
+            </div>
+            <div class="transaction-amount">
+              {{ formatCurrency(transaction.amount) }}
+            </div>
+            <div class="transaction-status">
+              <mat-chip [style.background-color]="getStatusColor(transaction.status)" 
+                       [style.color]="'white'">
+                {{ transaction.status }}
+              </mat-chip>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

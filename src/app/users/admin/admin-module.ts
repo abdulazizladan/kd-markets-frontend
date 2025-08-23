@@ -12,12 +12,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { BaseChartDirective, provideCharts, withDefaultRegisterables } from 'ng2-charts';
 
 import { AdminRoutingModule } from './admin-routing-module';
 import { LayoutComponent } from './components/layout-component/layout-component';
 import { DashboardComponent } from './components/dashboard-component/dashboard-component';
-
 
 @NgModule({
   providers: [
@@ -38,6 +38,7 @@ import { DashboardComponent } from './components/dashboard-component/dashboard-c
     MatToolbarModule,
     MatCardModule,
     MatProgressBarModule,
+    MatExpansionModule,
     BaseChartDirective,
     AdminRoutingModule
   ]
