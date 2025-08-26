@@ -27,7 +27,8 @@ export class AddActivityComponent {
     // HTML uses type="datetime-local" which binds to a string; convert on submit
     scheduledTime: ['', Validators.required],
     frequency: [ActivityFrequency.Weekly, Validators.required],
-    status: [ActivityStatus.Planned, Validators.required]
+    status: [ActivityStatus.Planned, Validators.required],
+    lastCompleted: ['']
   });
 
   async submit() {
@@ -37,18 +38,28 @@ export class AddActivityComponent {
     }
 
     this.isSubmitting = true;
-    const { name, description, scheduledTime, frequency, status } = this.form.value;
+    const { name, description, scheduledTime, frequency, status, lastCompleted } = this.form.value;
 
     try {
-      // Convert the datetime-local string to Date
-      const scheduled = new Date(scheduledTime);
-      await this.store.createActivity({
+      // Convert the datetime-local string to epoch timestamp
+      const scheduled = new Date(scheduledTime).getTime();
+
+      const payload: any = {
         name,
         description,
         scheduledTime: scheduled,
         frequency,
         status
-      });
+      };
+
+      // Include lastCompleted only if provided and numeric
+      if (lastCompleted !== undefined && lastCompleted !== null && String(lastCompleted).trim() !== '' && !isNaN(Number(lastCompleted))) {
+        payload.lastCompleted = Number(lastCompleted);
+      }
+
+      console.log('CreateActivity payload:', payload);
+
+      await this.store.createActivity(payload);
       this.dialogRef.close(true);
     } catch (e) {
       console.error('Failed to create activity', e);

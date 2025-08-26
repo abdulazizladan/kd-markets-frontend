@@ -2,6 +2,8 @@ import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import { ActivitiesStore } from '../../store/activities.store';
 import { ActivityStatus, ActivityFrequency } from '../../models/activity.model';
 import { AddActivityComponent } from '../add-activity-component/add-activity-component';
@@ -14,21 +16,30 @@ import { AddActivityComponent } from '../add-activity-component/add-activity-com
 })
 export class ActivitiesListComponent implements OnInit, OnDestroy {
 
+  private readonly store = inject(ActivitiesStore);
+  private readonly dialog = inject(MatDialog);
+  private readonly http = inject(HttpClient);
 
-    private readonly store = inject(ActivitiesStore);
-    private readonly dialog = inject(MatDialog);
-
+  // Test HTTP connectivity
+  async testHttpConnection() {
+    try {
+      console.log('Component: Testing HTTP connection to backend...');
+      const response = await firstValueFrom(this.http.get('https://kd-markets-backend.onrender.com/'));
+      console.log('Component: HTTP test successful:', response);
+    } catch (error) {
+      console.error('Component: HTTP test failed:', error);
+    }
+  }
 
   // Table columns
   displayedColumns: string[] = ['name', 'description', 'scheduledTime', 'frequency', 'status', 'lastCompleted', 'actions'];
 
   // Reactive state signals from store
-  activities = this.store.filteredActivities;
+  activities = this.store.activities;
+  filteredActivities = this.store.filteredActivities;
   isLoading = this.store.isLoading;
   error = this.store.error;
   search = this.store.search;
-  filters = this.store.filters;
-  pagination = this.store.pagination;
 
   // Computed properties from store
   totalActivities = this.store.totalActivities;
@@ -36,37 +47,48 @@ export class ActivitiesListComponent implements OnInit, OnDestroy {
   totalInProgress = this.store.totalInProgress;
   totalCompleted = this.store.totalCompleted;
   totalOverdue = this.store.totalOverdue;
-  hasNextPage = this.store.hasNextPage;
-  hasPreviousPage = this.store.hasPreviousPage;
 
   // Form controls
   searchControl = new FormControl('');
-  statusFilterControl = new FormControl<ActivityStatus | null>(null);
-  frequencyFilterControl = new FormControl<ActivityFrequency | null>(null);
-
-  // Filter options
-  statusOptions = Object.values(ActivityStatus);
-  frequencyOptions = Object.values(ActivityFrequency);
 
   private sub?: Subscription;
 
   ngOnInit(): void {
     // Load initial activities
+    console.log('Component: ngOnInit called');
+    console.log('Component: About to call store.loadActivities()');
+    
+    // Test environment access
+    console.log('Component: Environment check - baseUrl:', 'https://kd-markets-backend.onrender.com/');
+    
+    // Test HTTP connectivity first
+    this.testHttpConnection();
+    
     this.store.loadActivities();
+    
+    // Debug: Check store state after loading
+    setTimeout(() => {
+      console.log('Component: Store state after loading (1s delay):', {
+        activities: this.store.activities(),
+        totalActivities: this.store.totalActivities(),
+        isLoading: this.store.isLoading(),
+        error: this.store.error()
+      });
+    }, 1000);
+
+    // Additional debug check after 3 seconds
+    setTimeout(() => {
+      console.log('Component: Store state after loading (3s delay):', {
+        activities: this.store.activities(),
+        totalActivities: this.store.totalActivities(),
+        isLoading: this.store.isLoading(),
+        error: this.store.error()
+      });
+    }, 3000);
 
     // Live search
     this.sub = this.searchControl.valueChanges.subscribe((value) => {
-      //this.store.setSearch(value ?? '');
-    });
-
-    // Status filter
-    this.statusFilterControl.valueChanges.subscribe((status) => {
-      //this.store.setStatusFilter(status);
-    });
-
-    // Frequency filter
-    this.frequencyFilterControl.valueChanges.subscribe((frequency) => {
-      //this.store.setFrequencyFilter(frequency);
+      this.store.setSearch(value ?? '');
     });
   }
 
@@ -74,25 +96,10 @@ export class ActivitiesListComponent implements OnInit, OnDestroy {
     this.sub?.unsubscribe();
   }
 
-  // Pagination methods
-  async nextPage() {
-    await this.store.nextPage();
-  }
-
-  async previousPage() {
-    //await this.store.previousPage();
-  }
-
-  async goToPage(page: number) {
-    //await this.store.goToPage(page);
-  }
-
   // Filter methods
   clearFilters() {
-    //this.store.clearFilters();
     this.searchControl.setValue('');
-    this.statusFilterControl.setValue(null);
-    this.frequencyFilterControl.setValue(null);
+    this.store.setSearch('');
   }
 
   // CRUD operations
@@ -144,6 +151,15 @@ export class ActivitiesListComponent implements OnInit, OnDestroy {
     }
   }
 
+  getStatusOptions(): string[] {
+    return Object.values(ActivityStatus);
+  }
+
+  updateActivityStatusWithType(activityId: string, statusString: string) {
+    const status = statusString as ActivityStatus;
+    this.updateActivityStatus(activityId, status);
+  }
+
   getFrequencyIcon(frequency: ActivityFrequency): string {
     switch (frequency) {
       case ActivityFrequency.Daily:
@@ -163,15 +179,15 @@ export class ActivitiesListComponent implements OnInit, OnDestroy {
     }
   }
 
-  formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString();
+  formatDate(date: Date): string {
+    return date.toLocaleDateString();
   }
 
-  formatDateTime(dateString: string): string {
-    return new Date(dateString).toLocaleString();
+  formatDateTime(date: Date): string {
+    return date.toLocaleString();
   }
 
   clearError() {
-    //this.store.clearError();
+    this.store.clearError();
   }
 }

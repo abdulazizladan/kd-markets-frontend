@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
 
 import { MarketsManagementRoutingModule } from './markets-management-routing-module';
 import { MarketsListComponent } from './components/markets-list-component/markets-list-component';
@@ -40,6 +41,7 @@ import { AddMarketComponent } from './components/add-market-component/add-market
     MatButtonModule,
     MatIconModule,
     MatProgressBarModule,
+    MatSelectModule,
     MarketsManagementRoutingModule
   ]
 })

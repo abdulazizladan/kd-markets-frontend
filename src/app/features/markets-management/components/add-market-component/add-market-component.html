@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>Add Market</h2>
 <form [formGroup]="form" (ngSubmit)="onSubmit()" mat-dialog-content fxLayout="column" fxLayoutGap="12px">
-  <mat-form-field>
+  <mat-form-field appearance="outline">
     <mat-label>Name</mat-label>
     <input matInput formControlName="name" placeholder="Market name" />
     <mat-error *ngIf="form.get('name')?.hasError('required')">Name is required</mat-error>
@@ -22,12 +22,39 @@
     
     <mat-form-field fxFlex appearance="outline">
       <mat-label>LGA</mat-label>
-      <input matInput formControlName="lga" />
+      <mat-select formControlName="lga" placeholder="Select LGA">
+        <mat-option value="Birnin Gwari">Birnin Gwari</mat-option>
+        <mat-option value="Chikun">Chikun</mat-option>
+        <mat-option value="Giwa">Giwa</mat-option>
+        <mat-option value="Igabi">Igabi</mat-option>
+        <mat-option value="Ikara">Ikara</mat-option>
+        <mat-option value="Jaba">Jaba</mat-option>
+        <mat-option value="Jema'a">Jema'a</mat-option>
+        <mat-option value="Kachia">Kachia</mat-option>
+        <mat-option value="Kaduna North">Kaduna North</mat-option>
+        <mat-option value="Kaduna South">Kaduna South</mat-option>
+        <mat-option value="Kagarko">Kagarko</mat-option>
+        <mat-option value="Kajuru">Kajuru</mat-option>
+        <mat-option value="Kaura">Kaura</mat-option>
+        <mat-option value="Kauru">Kauru</mat-option>
+        <mat-option value="Kubau">Kubau</mat-option>
+        <mat-option value="Kudan">Kudan</mat-option>
+        <mat-option value="Lere">Lere</mat-option>
+        <mat-option value="Makarfi">Makarfi</mat-option>
+        <mat-option value="Sabon Gari">Sabon Gari</mat-option>
+        <mat-option value="Sanga">Sanga</mat-option>
+        <mat-option value="Soba">Soba</mat-option>
+        <mat-option value="Zangon Kataf">Zangon Kataf</mat-option>
+        <mat-option value="Zaria">Zaria</mat-option>
+      </mat-select>
     </mat-form-field>
 
+    
     <mat-form-field fxFlex appearance="outline">
       <mat-label>State</mat-label>
-      <input matInput formControlName="state" />
+      <mat-select formControlName="state" placeholder="Select State">
+        <mat-option value="Kaduna State">Kaduna State</mat-option>
+      </mat-select>
     </mat-form-field>
   </div>
 </form>

@@ -1,36 +1,15 @@
 import { computed, inject } from '@angular/core';
 import { signalStore, withState, withComputed, withMethods, patchState } from '@ngrx/signals';
-import { ActivitiesService, ActivityResponse, CreateActivityRequest, UpdateActivityRequest, ActivitiesQueryParams, ActivitiesPaginatedResponse } from '../services/activities-service';
+import { ActivitiesService, CreateActivityRequest, UpdateActivityRequest, ActivitiesQueryParams } from '../services/activities-service';
 import { Activity, ActivityStatus, ActivityFrequency } from '../models/activity.model';
 import { firstValueFrom } from 'rxjs';
 
 export interface ActivitiesState {
-  activities: ActivityResponse[];
-  selectedActivity: ActivityResponse | null;
+  activities: Activity[];
+  selectedActivity: Activity | null;
   isLoading: boolean;
   error: string | null;
   search: string;
-  filters: {
-    status: ActivityStatus | null;
-    frequency: ActivityFrequency | null;
-    marketId: string | null;
-    startDate: Date | null;
-    endDate: Date | null;
-  };
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
-  stats: {
-    total: number;
-    planned: number;
-    inProgress: number;
-    completed: number;
-    overdue: number;
-    byFrequency: Record<ActivityFrequency, number>;
-  } | null;
 }
 
 const initialState: ActivitiesState = {
@@ -38,21 +17,7 @@ const initialState: ActivitiesState = {
   selectedActivity: null,
   isLoading: false,
   error: null,
-  search: '',
-  filters: {
-    status: null,
-    frequency: null,
-    marketId: null,
-    startDate: null,
-    endDate: null
-  },
-  pagination: {
-    page: 1,
-    limit: 20,
-    total: 0,
-    totalPages: 0
-  },
-  stats: null
+  search: ''
 };
 
 export const ActivitiesStore = signalStore(
@@ -69,38 +34,6 @@ export const ActivitiesStore = signalStore(
         filtered = filtered.filter(activity =>
           activity.name.toLowerCase().includes(searchTerm) ||
           activity.description.toLowerCase().includes(searchTerm)
-        );
-      }
-
-      // Apply status filter
-      if (state.filters().status) {
-        filtered = filtered.filter(activity => activity.status === state.filters().status);
-      }
-
-      // Apply frequency filter
-      if (state.filters().frequency) {
-        filtered = filtered.filter(activity => activity.frequency === state.filters().frequency);
-      }
-
-      // Apply market filter
-      if (state.filters().marketId) {
-        filtered = filtered.filter(activity => 
-          // Note: This assumes activities have a marketId field
-          // Adjust based on your actual data structure
-          (activity as any).marketId === state.filters().marketId
-        );
-      }
-
-      // Apply date range filter
-      if (state.filters().startDate) {
-        filtered = filtered.filter(activity => 
-          new Date(activity.scheduledTime) >= state.filters().startDate!
-        );
-      }
-
-      if (state.filters().endDate) {
-        filtered = filtered.filter(activity => 
-          new Date(activity.scheduledTime) <= state.filters().endDate!
         );
       }
 
@@ -137,15 +70,6 @@ export const ActivitiesStore = signalStore(
       (state.activities() || []).filter(activity => activity.frequency === ActivityFrequency.Monthly)
     ),
 
-    // Computed properties for pagination
-    hasNextPage: computed(() => 
-      state.pagination().page < state.pagination().totalPages
-    ),
-
-    hasPreviousPage: computed(() => 
-      state.pagination().page > 1
-    ),
-
     // Computed properties for activity counts
     totalActivities: computed(() => state.activities()?.length || 0),
     totalPlanned: computed(() => state.activities()?.filter(a => a.status === ActivityStatus.Planned)?.length || 0),
@@ -154,68 +78,54 @@ export const ActivitiesStore = signalStore(
     totalOverdue: computed(() => state.activities()?.filter(a => a.status === ActivityStatus.Overdue)?.length || 0)
   })),
   withMethods((store, activitiesService = inject(ActivitiesService)) => ({
-    // Load activities with optional filtering and pagination
-    async loadActivities(params?: ActivitiesQueryParams) {
-      patchState(store, { isLoading: true, error: null });
-      
-      try {
-        const response = await firstValueFrom(activitiesService.getAllActivities(params));
-        
-        patchState(store, {
-          activities: response.activities || [],
-          pagination: {
-            page: response.page,
-            limit: response.limit,
-            total: response.total,
-            totalPages: response.totalPages
-          },
-          isLoading: false
-        });
-
-        // Update filters if provided
-        if (params) {
-          patchState(store, {
-            filters: {
-              status: params.status || null,
-              frequency: params.frequency || null,
-              marketId: params.marketId || null,
-              startDate: params.startDate || null,
-              endDate: params.endDate || null
-            }
-          });
-        }
-      } catch (error: any) {
-        patchState(store, {
-          error: error.message || 'Failed to load activities',
-          isLoading: false
-        });
-      }
+    // Set search term
+    setSearch(search: string) {
+      patchState(store, { search });
     },
 
-    // Load activities by market
-    async loadActivitiesByMarket(marketId: string, params?: Omit<ActivitiesQueryParams, 'marketId'>) {
+    // Load activities with optional search
+    async loadActivities(params?: ActivitiesQueryParams) {
+      console.log('Store: Loading activities with params:', params);
+      console.log('Store: Current state before loading:', {
+        activities: store.activities(),
+        isLoading: store.isLoading(),
+        error: store.error()
+      });
+
       patchState(store, { isLoading: true, error: null });
-      
+
       try {
-        const response = await firstValueFrom(activitiesService.getActivitiesByMarket(marketId, params));
+        console.log('Store: Making API call to getAllActivities...');
+        
+        const activities = await firstValueFrom(activitiesService.getAllActivities(params));
+        console.log('Store: API response received:', activities);
+        console.log('Store: Response activities array:', activities);
+        console.log('Store: Response activities length:', activities?.length);
         
         patchState(store, {
-          activities: response.activities || [],
-          pagination: {
-            page: response.page,
-            limit: response.limit,
-            total: response.total,
-            totalPages: response.totalPages
-          },
-          filters: {
-            ...store.filters(),
-            marketId
-          },
+          activities: activities || [],
           isLoading: false
         });
+
+        console.log('Store: State updated with activities:', store.activities());
+        console.log('Store: New activities length:', store.activities().length);
+
+        // Update search if provided
+        if (params?.search !== undefined) {
+          patchState(store, { search: params.search });
+        }
       } catch (error: any) {
+        console.error('Store: Error loading activities:', error);
+        console.error('Store: Error details:', {
+          message: error.message,
+          status: error.status,
+          statusText: error.statusText,
+          url: error.url,
+          stack: error.stack
+        });
+        
         patchState(store, {
-          error: error.message || 'Failed to load market activities',
+          error: error.message || 'Failed to load activities',
           isLoading: false
         });
       }
@@ -251,10 +161,6 @@ export const ActivitiesStore = signalStore(
         const currentActivities = store.activities() || [];
         patchState(store, {
           activities: [created, ...currentActivities],
-          pagination: {
-            ...store.pagination(),
-            total: store.pagination().total + 1
-          },
           isLoading: false
         });
 
@@ -361,10 +267,6 @@ export const ActivitiesStore = signalStore(
         patchState(store, {
           activities: filteredActivities,
           selectedActivity: store.selectedActivity()?.id === id ? null : store.selectedActivity(),
-          pagination: {
-            ...store.pagination(),
-            total: store.pagination().total - 1
-          },
           isLoading: false
         });
       } catch (error: any) {
@@ -376,114 +278,17 @@ export const ActivitiesStore = signalStore(
       }
     },
 
-    // Bulk update activities status
-    async bulkUpdateStatus(activityIds: string[], status: ActivityStatus) {
-      patchState(store, { isLoading: true, error: null });
-      
-      try {
-        const result = await firstValueFrom(activitiesService.bulkUpdateStatus(activityIds, status));
-        
-        // Update affected activities in the list
-        const currentActivities = store.activities() || [];
-        const updatedActivities = currentActivities.map(activity =>
-          activityIds.includes(activity.id) 
-            ? { ...activity, status }
-            : activity
-        );
-        
-        patchState(store, {
-          activities: updatedActivities,
-          isLoading: false
-        });
-
-        return result;
-      } catch (error: any) {
-        patchState(store, {
-          error: error.message || 'Failed to bulk update activities',
-          isLoading: false
-        });
-        throw error;
-      }
-    },
-
-    // Load activities statistics
-    async loadActivitiesStats(marketId?: string) {
-      try {
-        const stats = await firstValueFrom(activitiesService.getActivitiesStats(marketId));
-        
-        patchState(store, { stats });
-      } catch (error: any) {
-        patchState(store, {
-          error: error.message || 'Failed to load activities statistics'
-        });
-      }
-    },
-
-    // Load upcoming activities
-    async loadUpcomingActivities(days: number = 7, marketId?: string) {
-      try {
-        const upcoming = await firstValueFrom(activitiesService.getUpcomingActivities(days, marketId));
-        
-        // You might want to store these separately or merge with main activities
-        // For now, we'll just return them
-        return upcoming;
-      } catch (error: any) {
-        patchState(store, {
-          error: error.message || 'Failed to load upcoming activities'
-        });
-        throw error;
-      }
-    },
-
-    // Load overdue activities
-    async loadOverdueActivities(marketId?: string) {
-      try {
-        const overdue = await firstValueFrom(activitiesService.getOverdueActivities(marketId));
-        
-        // You might want to store these separately or merge with main activities
-        // For now, we'll just return them
-        return overdue;
-      } catch (error: any) {
-        patchState(store, {
-          error: error.message || 'Failed to load overdue activities'
-        });
-        throw error;
-      }
-    },
-
-    // Navigation methods for pagination
-    async nextPage() {
-      if (store.hasNextPage()) {
-        const nextPage = store.pagination().page + 1;
-        // Remove nulls from filters to satisfy ActivitiesQueryParams type
-        const filters = store.filters();
-        const cleanedFilters = {
-          ...filters,
-          status: filters.status === null ? undefined : filters.status,
-          frequency: filters.frequency === null ? undefined : filters.frequency,
-          marketId: filters.marketId === null ? undefined : filters.marketId,
-          startDate: filters.startDate === null ? undefined : filters.startDate,
-          endDate: filters.endDate === null ? undefined : filters.endDate,
-        };
-        await this.loadActivities({
-          ...cleanedFilters,
-          page: nextPage,
-          limit: store.pagination().limit
-        });
-      }
-    },
-
     // Utility method to clear activities
     clearActivities() {
       patchState(store, {
         activities: [],
-        selectedActivity: null,
-        pagination: {
-          page: 1,
-          limit: 20,
-          total: 0,
-          totalPages: 0
-        }
+        selectedActivity: null
       });
+    },
+
+    // Clear error
+    clearError() {
+      patchState(store, { error: null });
     }
-})))
+  }))
+)

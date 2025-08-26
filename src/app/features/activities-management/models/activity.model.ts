@@ -3,7 +3,7 @@ export enum ActivityStatus {
     InProgress = 'In Progress',
     Completed = 'Completed',
     Overdue = 'Overdue'
-  }
+}
 
 export enum ActivityFrequency {
     Daily = 'Daily',
@@ -14,12 +14,13 @@ export enum ActivityFrequency {
     AdHoc = 'Ad Hoc' // For one-off activities
 }
 
-export class Activity {
-    "name": string;
-    "description": string;
-    "scheduledTime": Date;
-    "frequency": ActivityFrequency;
-    "status": ActivityStatus = ActivityStatus.Planned; // Default status is 'Planned'
-    "id"?: string;
-    "lastCompleted"?: Date;
+export interface Activity {
+    id: string;
+    name: string;
+    description: string;
+    scheduledTime: Date; // Date object for backend
+    frequency: ActivityFrequency;
+    status: ActivityStatus;
+    lastCompleted?: Date; // Date object for backend
+    createdAt: number; // Unix timestamp from backend
 }

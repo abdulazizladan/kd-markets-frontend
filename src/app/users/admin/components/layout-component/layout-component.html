@@ -1,6 +1,6 @@
 <div style="min-height: 100%;" fxLayout="column">
     
-    <mat-toolbar color="primary" class="mat-elevation-z5">
+    <mat-toolbar color="primary" class="mat-elevation-z5" style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000;">
         <mat-toolbar-row fxLayout="row">
             <button mat-icon-button color="primary" (click)="drawer.toggle()">
                 <mat-icon>menu</mat-icon>
@@ -23,8 +23,11 @@
         </mat-toolbar-row>
     </mat-toolbar>
 
-    <mat-drawer-container class="example-container" autosize fxFlex="1 1 auto" hasBackdrop="false">
-        <mat-drawer #drawer mode="over" opened class="example-sidenav" fxLayout="column">
+    <!-- Spacer to offset fixed toolbar height (default 64px on desktop, 56px on mobile) -->
+    <div style="height: 64px;"></div>
+
+    <mat-drawer-container class="example-container" autosize fxFlex="1 1 auto" hasBackdrop="false" style="height: calc(100vh - 64px);">
+        <mat-drawer #drawer mode="side" opened class="example-sidenav" fxLayout="column">
             <div id="profile">
 
             </div>
@@ -100,7 +103,7 @@
         </mat-accordion>
         </mat-drawer>
       
-        <div class="example-sidenav-content">
+        <div class="example-sidenav-content" style="height: 100%; overflow: auto;">
             <div fxLayout="row" fxLayoutAlign="center center">
                 <div fxFlex.lt-md=100% fxFlex.gt-md=1024px>
                     <router-outlet></router-outlet>
