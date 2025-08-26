@@ -82,17 +82,18 @@
         </button>
         
         <mat-accordion style="box-shadow: none; border-radius: 0;">
+          
           <mat-expansion-panel style="box-shadow: none; border-radius: 0;">
-            <mat-expansion-panel-header>
+            <mat-expansion-panel-header style="padding-left: 15px; font-size: medium; color: green">
               <mat-panel-title>
-                <mat-icon>payment</mat-icon>
+                <mat-icon style="margin-right: 6px">payment</mat-icon>
                 Payments
               </mat-panel-title>
             </mat-expansion-panel-header>
             <div style="display: flex; flex-direction: column; gap: 8px; padding: 8px 0;">
               <button mat-button routerLink="./payments" routerLinkActive="active">
                 <mat-icon>description</mat-icon>
-                Invoices
+                Dashboard
               </button>
               <button mat-button routerLink="./payments/history" routerLinkActive="active">
                 <mat-icon>history</mat-icon>

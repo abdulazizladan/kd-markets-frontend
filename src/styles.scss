@@ -66,6 +66,13 @@ body {
 }
 
 :root {
+  @include mat.expansion-overrides((
+    header-collapsed-state-height: 1,
+    header-expanded-state-height: 1
+  ));
+}
+
+:root {
   @include mat.toolbar-overrides((
     container-text-color: rgb(27, 71, 45),
     container-background-color: white,
